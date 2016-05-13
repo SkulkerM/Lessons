@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="Lessons.Case2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lessons"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <SplitView Grid.Row="1" Margin="5,5,5,5" IsPaneOpen="true" DisplayMode="Inline" OpenPaneLength="200">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="100"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Grid.Row="0" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                    <Rectangle Grid.Row="0" Grid.Column="1" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                    <Rectangle Grid.Row="1" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                </Grid>
+            </SplitView.Pane>
+            <Canvas>
+                <Rectangle Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                <StackPanel Orientation="Vertical">
+                    <Rectangle Height="100" Width="135" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                    <Rectangle Height="100" Width="135" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                    <Rectangle Height="100" Width="135" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+                </StackPanel>
+            </Canvas>
+        </SplitView>
+        <Rectangle Grid.Row="0" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+        <Rectangle Grid.Row="1" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+        <Rectangle Grid.Row="2" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+    </Grid>
+</Page>
