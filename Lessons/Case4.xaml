@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="Lessons.Case4"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lessons"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBox">
+          <Setter Property="FontSize" Value="10"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"/>
+        </Style>
+    </Page.Resources>
+    <SplitView>
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5" Text="T10MinimapApp2 Project 1 Main Page"/>
+            <TextBox Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5" Text="Building a responsive UI is actually not that hard when you use XAML in Visual Studio.  Using static content can help to ensure that the UI responds appropriately to changing window sizes" TextWrapping="Wrap"/>
+            <Grid Grid.Row="2" Margin="5,5,5,5" BorderBrush="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="85"/>
+                        <RowDefinition Height="85"/>
+                        <RowDefinition Height="85"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Background="OrangeRed" Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5" Text="Image 1"/>
+                    <TextBox Background="Aqua" Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5" Text="Image 2"/>
+                    <TextBox Background="GreenYellow" Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5,5,5,5" Text="Image 3"/>
+                </Grid>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <StackPanel BorderBrush="Black" BorderThickness="1" MinHeight="100" Margin="5,5,5,5">
+                        <TextBlock Text="This is my first TextBlock.  It contains the same basic text as the others" Margin="5,5,5,5" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <TextBox BorderBrush="Black" BorderThickness="1" MinHeight="100" Margin="5,5,5,5" Text="This is my second TextBlock.  It contains the same basic text as the others" TextWrapping="Wrap"/>
+                    <TextBox BorderBrush="Black" BorderThickness="1" MinHeight="100" Margin="5,5,5,5" Text="This is my third TextBlock.  It contains the same basic text as the others" TextWrapping="Wrap"/>
+                    <TextBox BorderBrush="Black" BorderThickness="1" MinHeight="100" Margin="5,5,5,5" Text="This is my fourth TextBlock.  It contains the same basic text as the others" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+            <Rectangle Grid.Row="2" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+            <Rectangle Grid.Row="3" Stroke="Black" StrokeThickness="1" Margin="5,5,5,5"/>
+        </Grid>
+    </SplitView>
+
+</Page>

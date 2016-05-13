@@ -40,7 +40,7 @@ namespace Lessons
     {
       // long-running startup tasks go here
 
-      NavigationService.Navigate(typeof(Case2));
+      NavigationService.Navigate(typeof(Case4));
       await Task.CompletedTask;
     }
   }
