@@ -6,8 +6,68 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <Style x:Key="tsTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Collection" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
+            <ListBox Grid.Row="1" Margin="5,5,5,5" x:Name="CoListBox"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5,5,5,5">
+                <Button Content="Delete Selected" Margin="5,5,5,5"/>
+                <Button Content="Clear List" Margin="5,5,5,5"/>
+                <Button Content="Load from DB" Margin="5,5,5,5"/>
+                <Button Content="Reset Collection" Margin="5,5,5,5"/>
+            </StackPanel>
+            <TextBlock Grid.Row="3" Text="Database Items" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
+            <ListBox Grid.Row="4" Margin="5,5,5,5" x:Name="DbListBox"/>
+            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="5,5,5,5">
+                <Button Content="Create Table using Collection" Margin="5,5,5,5"/>
+                <Button Content="Delete Selected Item" Margin="5,5,5,5"/>
+                <Button Content="Delete All Items" Margin="5,5,5,5"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="Edit Item" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
+            <Grid Grid.Row="1" Margin="5,5,5,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,5,5,5"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,10,5" x:Name="NameBox"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="ID:" Margin="5,5,5,5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,10,5" x:Name="IdBox"/>
+            </Grid>
+            <StackPanel Grid.Row="3">
+                <Button Content="Save to Collection" Margin="5,5,5,5"/>
+                <Button Content="Create in DB (insert)" Margin="5,5,5,5"/>
+                <Button Content="Update in DB (update)" Margin="5,5,5,5"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
