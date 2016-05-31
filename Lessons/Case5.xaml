@@ -27,19 +27,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Collection" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
-            <ListBox Grid.Row="1" Margin="5,5,5,5" x:Name="CoListBox"/>
+            <ListBox Grid.Row="1" Margin="5,5,5,5" x:Name="CoListBox" SelectionChanged="CoListBox_SelectionChanged"/>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5,5,5,5">
-                <Button Content="Delete Selected" Margin="5,5,5,5"/>
-                <Button Content="Clear List" Margin="5,5,5,5"/>
-                <Button Content="Load from DB" Margin="5,5,5,5"/>
-                <Button Content="Reset Collection" Margin="5,5,5,5"/>
+                <Button Content="Delete Selected" Margin="5,5,5,5" x:Name="CoDeleteSelectedButton" Click="Col_DeleteSelected_Click"/>
+                <Button Content="Clear List" Margin="5,5,5,5" x:Name="CoClearListButton" Click="Col_ClearList_Click"/>
+                <Button Content="Load from DB" Margin="5,5,5,5" x:Name="CoLoadFromDbButton" Click="Col_LoadFromDb_Click"/>
+                <Button Content="Reset Collection" Margin="5,5,5,5" x:Name="CoResetButton" Click="Col_Reset_Click"/>
             </StackPanel>
             <TextBlock Grid.Row="3" Text="Database Items" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
-            <ListBox Grid.Row="4" Margin="5,5,5,5" x:Name="DbListBox"/>
+            <ListBox Grid.Row="4" Margin="5,5,5,5" x:Name="DbListBox" SelectionChanged="DbListBox_SelectionChanged"/>
             <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="5,5,5,5">
-                <Button Content="Create Table using Collection" Margin="5,5,5,5"/>
-                <Button Content="Delete Selected Item" Margin="5,5,5,5"/>
-                <Button Content="Delete All Items" Margin="5,5,5,5"/>
+                <Button Content="Create Table using Collection" Margin="5,5,5,5" Click="Db_CreateTable_Click" x:Name="DbCreateTableButton"/>
+                <Button Content="Delete Selected Item" Margin="5,5,5,5" Click="Db_DeleteSelected_Click" x:Name="DbDeleteSelectedButton"/>
+                <Button Content="Delete All Items" Margin="5,5,5,5" Click="Db_DeleteAll_Click" x:Name="DbDeleteAllButton"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Column="1">
@@ -59,14 +59,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,5,5,5"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,10,5" x:Name="NameBox"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,10,5" x:Name="NameBox" TextChanged="NameBox_TextChanged"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="ID:" Margin="5,5,5,5"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,10,5" x:Name="IdBox"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,10,5" x:Name="IdBox" TextChanged="IdBox_TextChanged"/>
             </Grid>
             <StackPanel Grid.Row="3">
-                <Button Content="Save to Collection" Margin="5,5,5,5"/>
-                <Button Content="Create in DB (insert)" Margin="5,5,5,5"/>
-                <Button Content="Update in DB (update)" Margin="5,5,5,5"/>
+                <Button Content="Save to Collection" Margin="5,5,5,5" x:Name="ItemToColButton" Click="Item_SaveToCol_Click"/>
+                <Button Content="Create in DB (insert)" Margin="5,5,5,5" x:Name="ItemCreateButton" Click="Item_Create_Click"/>
+                <Button Content="Update in DB (update)" Margin="5,5,5,5" x:Name="ItemUpdateButton" Click="Item_Update_Click"/>
             </StackPanel>
         </Grid>
     </Grid>
