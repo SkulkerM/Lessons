@@ -75,9 +75,11 @@ namespace Lessons
 
     private void Db_DeleteSelected_Click(object sender, RoutedEventArgs e)
     {
+      var id = (DbListBox.SelectedItem as Animal).ID;
       // search the database for that item
+      Animal sel = DB.Table<Animal>().Where<Animal>(p => p.ID == id).Single<Animal>();
       // remove that item from the database
-
+      DB.Delete(sel);
       // remove the item from database list
       DbListBox.Items.Remove(DbListBox.SelectedItem);
       DbListBox.SelectedItem = null;
@@ -88,11 +90,11 @@ namespace Lessons
     {
       // delete all items in the DB
       DB.DeleteAll<Animal>();
+      DbListBox.Items.Clear();
       // run through items in collection and add them to DB
-
+      DB.InsertAll(CoListBox.Items);
       // load DB into listbox
       LoadDBList();
-
       // update DB button states
       UpdateDatabaseButtons();
     }
@@ -114,6 +116,10 @@ namespace Lessons
       // toss all items from collection
       CoListBox.Items.Clear();
       // copy over items from DB list
+      foreach (Animal a in DbListBox.Items)
+      {
+        CoListBox.Items.Add(a);
+      }
       // update collection button states
       UpdateCollectionButtons();
     }
@@ -137,28 +143,60 @@ namespace Lessons
 
     private void Item_SaveToCol_Click(object sender, RoutedEventArgs e)
     {
-      // take item data - ID and name, check for matching name in collection
-      // on ID match, update the name?
-      // otherwise, add to collection
+      int id = int.Parse(IdBox.Text);
+      // attempt to find item with same ID in collection
+      var a = (Animal)(CoListBox.Items.Where(p => (p as Animal).ID == id).SingleOrDefault());
+      // if it exists in the collection, just update it
+      if (a != null)
+      {
+        a.CommonName = NameBox.Text;
+      }
+      else
+      {       
+        CoListBox.Items.Add(new Animal() { ID = id, CommonName = NameBox.Text });
+        var ol = CoListBox.Items.OrderBy(p => (p as Animal).ID).ToList();
+        CoListBox.Items.Clear();
+        foreach (Animal oa in ol)
+        {
+          CoListBox.Items.Add(oa);
+        }
+      }
+      ClearItem();
       // update collection buttons
       UpdateCollectionButtons();
     }
 
     private void Item_Create_Click(object sender, RoutedEventArgs e)
     {
+      int id = int.Parse(IdBox.Text);
       // if item doesn't exist in database
-        // add new item to database
-        // add item to list
-        // sort the list?
-        // Update database buttons
-
+      var a = DB.Table<Animal>().Where<Animal>(p => p.ID == id).SingleOrDefault<Animal>();
+      if (a == null)
+      {
+        Animal n = new Animal() { ID = id, CommonName = NameBox.Text };
+        DB.Insert(n);
+        // cheat a bit here... just clear and reload
+        DbListBox.Items.Clear();
+        LoadDBList();
+        UpdateDatabaseButtons();
+        ClearItem();
+      }
     }
 
     private void Item_Update_Click(object sender, RoutedEventArgs e)
     {
-      // find item in database
-        // update item name
-        // update the list
+      int id = int.Parse(IdBox.Text);
+      // if item doesn't exist in database
+      var a = DB.Table<Animal>().Where<Animal>(p => p.ID == id).SingleOrDefault<Animal>();
+      if (a != null)
+      {
+        a.CommonName = NameBox.Text;
+        DB.Update(a);
+        DbListBox.Items.Clear();
+        LoadDBList();
+        UpdateDatabaseButtons();
+        ClearItem();
+      }
     }
 
     private void CoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -189,14 +227,14 @@ namespace Lessons
     {
       DbDeleteAllButton.IsEnabled = (DbListBox.Items.Count > 0);
       DbDeleteSelectedButton.IsEnabled = (DbListBox.SelectedItem != null);
-      DbCreateTableButton.IsEnabled = (CoListBox.Items.Count > 0);
+      CoLoadFromDbButton.IsEnabled = (DbListBox.Items.Count > 0);
     }
 
     private void UpdateCollectionButtons()
     {
       CoDeleteSelectedButton.IsEnabled = (CoListBox.SelectedItem != null);
       CoClearListButton.IsEnabled = (CoListBox.Items.Count > 0);
-      CoLoadFromDbButton.IsEnabled = (DbListBox.Items.Count > 0);
+      DbCreateTableButton.IsEnabled = (CoListBox.Items.Count > 0);
     }
 
     private void UpdateItemButtons()
@@ -217,7 +255,11 @@ namespace Lessons
 
     private void LoadDBList()
     {
-
+      // get a list of all the people in the DB
+      foreach (Animal a in DB.Table<Animal>())
+      {
+        DbListBox.Items.Add(a);
+      }
     }
 
     private void IdBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -228,6 +270,12 @@ namespace Lessons
     private void NameBox_TextChanged(object sender, TextChangedEventArgs e)
     {
       UpdateItemButtons();
+    }
+
+    private void ClearItem()
+    {
+      NameBox.Text = "";
+      IdBox.Text = "";
     }
   }
 }
