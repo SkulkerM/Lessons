@@ -5,7 +5,13 @@
     xmlns:local="using:Lessons"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sampleData="using:Lessons.SampleData"
     mc:Ignorable="d">
+    
+    <d:Page.DataContext>
+        <sampleData:AnimalCollection/>
+    </d:Page.DataContext>
+    
     <Page.Resources>
         <Style x:Key="tsTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24"/>
@@ -27,7 +33,19 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Collection" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
-            <ListBox Grid.Row="1" Margin="5,5,5,5" x:Name="CoListBox" SelectionChanged="CoListBox_SelectionChanged"/>
+            <ScrollViewer Grid.Row="1" Margin="5,5,5,5">
+                <ListView x:Name="CoListView" ItemsSource="{Binding}" SelectionChanged="CoListBox_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ID}" Width="20"/>
+                                <TextBlock Text="{Binding CommonName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+            <!--<ListBox Grid.Row="1" Margin="5,5,5,5" x:Name="CoListBox" />-->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5,5,5,5">
                 <Button Content="Delete Selected" Margin="5,5,5,5" x:Name="CoDeleteSelectedButton" Click="Col_DeleteSelected_Click"/>
                 <Button Content="Clear List" Margin="5,5,5,5" x:Name="CoClearListButton" Click="Col_ClearList_Click"/>
@@ -35,7 +53,9 @@
                 <Button Content="Reset Collection" Margin="5,5,5,5" x:Name="CoResetButton" Click="Col_Reset_Click"/>
             </StackPanel>
             <TextBlock Grid.Row="3" Text="Database Items" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
-            <ListBox Grid.Row="4" Margin="5,5,5,5" x:Name="DbListBox" SelectionChanged="DbListBox_SelectionChanged"/>
+            <ScrollViewer Grid.Row="4" Margin="5,5,5,5">
+                <ListView x:Name="DbListBox" SelectionChanged="DbListBox_SelectionChanged"/>
+            </ScrollViewer>
             <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="5,5,5,5">
                 <Button Content="Create Table using Collection" Margin="5,5,5,5" Click="Db_CreateTable_Click" x:Name="DbCreateTableButton"/>
                 <Button Content="Delete Selected Item" Margin="5,5,5,5" Click="Db_DeleteSelected_Click" x:Name="DbDeleteSelectedButton"/>

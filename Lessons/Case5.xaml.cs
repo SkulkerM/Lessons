@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using SQLite;
+using Lessons.SampleData;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,22 +28,7 @@ namespace Lessons
   /// </summary>
   public sealed partial class Case5 : Page
   {
-    ObservableCollection<Animal> Animals = new ObservableCollection<Animal>();
     SQLiteConnection DB;
-
-    //
-    public class Animal
-    {
-      [PrimaryKey]
-      public int ID { get; set; }
-      public string CommonName { get; set; }
-
-      public override string ToString()
-      {
-        return String.Format("{0,-6}{1}", ID, CommonName);
-      }
-    }
-
 
     public Case5()
     {
@@ -92,7 +78,7 @@ namespace Lessons
       DB.DeleteAll<Animal>();
       DbListBox.Items.Clear();
       // run through items in collection and add them to DB
-      DB.InsertAll(CoListBox.Items);
+      DB.InsertAll(CoListView.Items);
       // load DB into listbox
       LoadDBList();
       // update DB button states
@@ -102,11 +88,11 @@ namespace Lessons
     private void Col_Reset_Click(object sender, RoutedEventArgs e)
     {
       // toss all items from collection
-      CoListBox.Items.Clear();
+      CoListView.Items.Clear();
       // add items from static source
-      CoListBox.Items.Add(new Animal() { ID = 0, CommonName = "Dog" });
-      CoListBox.Items.Add(new Animal() { ID = 1, CommonName = "Cat" });
-      CoListBox.Items.Add(new Animal() { ID = 2, CommonName = "Horse" });
+      CoListView.Items.Add(new Animal() { ID = 0, CommonName = "Dog" });
+      CoListView.Items.Add(new Animal() { ID = 1, CommonName = "Cat" });
+      CoListView.Items.Add(new Animal() { ID = 2, CommonName = "Horse" });
       // update collection button states
       UpdateCollectionButtons();
     }
@@ -114,11 +100,11 @@ namespace Lessons
     private void Col_LoadFromDb_Click(object sender, RoutedEventArgs e)
     {
       // toss all items from collection
-      CoListBox.Items.Clear();
+      CoListView.Items.Clear();
       // copy over items from DB list
       foreach (Animal a in DbListBox.Items)
       {
-        CoListBox.Items.Add(a);
+        CoListView.Items.Add(a);
       }
       // update collection button states
       UpdateCollectionButtons();
@@ -127,7 +113,7 @@ namespace Lessons
     private void Col_ClearList_Click(object sender, RoutedEventArgs e)
     {
       // clear the collection
-      CoListBox.Items.Clear();
+      CoListView.Items.Clear();
       // update collection button states
       UpdateCollectionButtons();
     }
@@ -135,8 +121,8 @@ namespace Lessons
     private void Col_DeleteSelected_Click(object sender, RoutedEventArgs e)
     {
       // remove the selected item from collection
-      CoListBox.Items.Remove(CoListBox.SelectedItem);
-      CoListBox.SelectedItem = null;
+      CoListView.Items.Remove(CoListView.SelectedItem);
+      CoListView.SelectedItem = null;
       // update the collection buttons
       UpdateCollectionButtons();
     }
@@ -145,7 +131,7 @@ namespace Lessons
     {
       int id = int.Parse(IdBox.Text);
       // attempt to find item with same ID in collection
-      var a = (Animal)(CoListBox.Items.Where(p => (p as Animal).ID == id).SingleOrDefault());
+      var a = (Animal)(CoListView.Items.Where(p => (p as Animal).ID == id).SingleOrDefault());
       // if it exists in the collection, just update it
       if (a != null)
       {
@@ -153,12 +139,12 @@ namespace Lessons
       }
       else
       {       
-        CoListBox.Items.Add(new Animal() { ID = id, CommonName = NameBox.Text });
-        var ol = CoListBox.Items.OrderBy(p => (p as Animal).ID).ToList();
-        CoListBox.Items.Clear();
+        CoListView.Items.Add(new Animal() { ID = id, CommonName = NameBox.Text });
+        var ol = CoListView.Items.OrderBy(p => (p as Animal).ID).ToList();
+        CoListView.Items.Clear();
         foreach (Animal oa in ol)
         {
-          CoListBox.Items.Add(oa);
+          CoListView.Items.Add(oa);
         }
       }
       ClearItem();
@@ -202,7 +188,7 @@ namespace Lessons
     private void CoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
       // set selected item information in the item box
-      Animal selected = ((sender as ListBox).SelectedItem as Animal);
+      Animal selected = ((sender as ListView).SelectedItem as Animal);
       if (selected != null)
       {
         NameBox.Text = selected.CommonName;
@@ -214,7 +200,7 @@ namespace Lessons
 
     private void DbListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      Animal selected = ((sender as ListBox).SelectedItem as Animal);
+      Animal selected = ((sender as ListView).SelectedItem as Animal);
       if (selected != null)
       {
         NameBox.Text = selected.CommonName;
@@ -232,9 +218,9 @@ namespace Lessons
 
     private void UpdateCollectionButtons()
     {
-      CoDeleteSelectedButton.IsEnabled = (CoListBox.SelectedItem != null);
-      CoClearListButton.IsEnabled = (CoListBox.Items.Count > 0);
-      DbCreateTableButton.IsEnabled = (CoListBox.Items.Count > 0);
+      CoDeleteSelectedButton.IsEnabled = (CoListView.SelectedItem != null);
+      CoClearListButton.IsEnabled = (CoListView.Items.Count > 0);
+      DbCreateTableButton.IsEnabled = (CoListView.Items.Count > 0);
     }
 
     private void UpdateItemButtons()
