@@ -51,7 +51,7 @@ namespace Lessons
 
       DB.CreateTable<Animal>();
       // if we have items in the database, load 'em up
-      if (DB.Table<Animal>().Count() > 1)
+      if (DB.Table<Animal>().Count() > 0)
       {
         // load DB into listbox
         LoadDBList();
