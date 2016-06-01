@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace Lessons.SampleData
 {
-  public class AnimalCollection : ObservableCollection<Animal>
+  public class SampleAnimalCollection 
   {
-    public AnimalCollection()
+    public AnimalCollection Animals = new AnimalCollection();
+
+    public SampleAnimalCollection()
     {
-      Add(new Animal() { ID = 0, CommonName = "Cat" });
-      Add(new Animal() { ID = 1, CommonName = "Dog" });
-      Add(new Animal() { ID = 2, CommonName = "Horse" });
+      Animals.Add(new Animal() { ID = 0, CommonName = "Cat" });
+      Animals.Add(new Animal() { ID = 1, CommonName = "Dog" });
+      Animals.Add(new Animal() { ID = 2, CommonName = "Horse" });
     }
   }
 }

@@ -7,16 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sampleData="using:Lessons.SampleData"
     mc:Ignorable="d">
-    
+
     <d:Page.DataContext>
-        <sampleData:AnimalCollection/>
+        <sampleData:SampleAnimalCollection/>
     </d:Page.DataContext>
-    
+
     <Page.Resources>
         <Style x:Key="tsTitle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="Foreground" Value="Black"/>
         </Style>
+        <local:IntStringConverter x:Key="IntStringConverter"/>
+        <local:LengthBoolConverter x:Key="LengthBoolConverter"/>
     </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
@@ -34,12 +36,12 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Collection" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
             <ScrollViewer Grid.Row="1" Margin="5,5,5,5">
-                <ListView x:Name="CoListView" ItemsSource="{Binding}" SelectionChanged="CoListBox_SelectionChanged">
+                <ListView x:Name="CoListView" ItemsSource="{x:Bind Animals}" SelectionChanged="CoListBox_SelectionChanged">
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="local:Animal">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding ID}" Width="20"/>
-                                <TextBlock Text="{Binding CommonName}" />
+                                <TextBlock Text="{x:Bind ID, Converter={StaticResource IntStringConverter}}" Width="20"/>
+                                <TextBlock Text="{x:Bind CommonName, Mode=TwoWay}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -66,10 +68,34 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Edit Item" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
+            <TextBlock Grid.Row="0" Text="Edit Selected Item" Style="{StaticResource tsTitle}" Margin="5,5,5,5"/>
             <Grid Grid.Row="1" Margin="5,5,5,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="33"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,5,5,5" Grid.ColumnSpan="2"/>
+                <TextBox Grid.Row="0" Grid.Column="2" Margin="5,5,10,5" x:Name="NameBox" Text="{Binding Path=SelectedItem.CommonName, ElementName=CoListView, Mode=TwoWay}" TextChanged="NameBox_TextChanged"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="ID:" Margin="5,5,5,5" Grid.ColumnSpan="2"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Margin="5,5,10,5" x:Name="IdBox" Text="{Binding Path=SelectedItem.ID, ElementName=CoListView}" TextChanged="IdBox_TextChanged"/>
+            </Grid>
+            <StackPanel Grid.Row="3">
+                <Button Content="Save to Collection" Margin="5,5,5,5" x:Name="ItemToColButton" Click="Item_SaveToCol_Click"/>
+                <Button Content="Create in DB (insert)" Margin="5,5,5,5" x:Name="ItemCreateButton" Click="Item_Create_Click"/>
+                <Button Content="Update in DB (update)" Margin="5,5,5,5" x:Name="ItemUpdateButton" Click="Item_Update_Click"/>
+            </StackPanel>
+            <TextBlock Grid.Row="4" Text="Modify Collection" Style="{StaticResource tsTitle}" Margin="5,25,5,5"/>
+            <Grid Grid.Row="5" Margin="5,5,5,5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -78,16 +104,14 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" Margin="5,5,5,5"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="5,5,10,5" x:Name="NameBox" TextChanged="NameBox_TextChanged"/>
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="ID:" Margin="5,5,5,5"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="5,5,10,5" x:Name="IdBox" TextChanged="IdBox_TextChanged"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="change collection item" Margin="5,5,5,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="ID" Margin="10,5,5,5"/>
+                <TextBox Grid.Row="1" x:Name="ColItemName" Grid.Column="0" Margin="5,5,5,5"/>
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="10,5,5,5">
+                    <TextBox x:Name="ColItemID"/>
+                    <Button Content="Change" Margin="15,0,0,0" Click="ChangeColItem_Click" IsEnabled="{Binding Path=Text.Length, ElementName=ColItemID, Converter={StaticResource LengthBoolConverter}, Mode=OneWay}" />
+                </StackPanel>
             </Grid>
-            <StackPanel Grid.Row="3">
-                <Button Content="Save to Collection" Margin="5,5,5,5" x:Name="ItemToColButton" Click="Item_SaveToCol_Click"/>
-                <Button Content="Create in DB (insert)" Margin="5,5,5,5" x:Name="ItemCreateButton" Click="Item_Create_Click"/>
-                <Button Content="Update in DB (update)" Margin="5,5,5,5" x:Name="ItemUpdateButton" Click="Item_Update_Click"/>
-            </StackPanel>
         </Grid>
     </Grid>
 </Page>

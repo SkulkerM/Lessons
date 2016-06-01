@@ -14,7 +14,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
 using SQLite;
-using Lessons.SampleData;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -22,6 +23,59 @@ using Lessons.SampleData;
 
 namespace Lessons
 {
+  public class IntStringConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+      return ((int)value).ToString();
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+      throw new NotImplementedException();
+    }
+  }
+  public class LengthBoolConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+      return ((int)value) != 0;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, string language)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+  public class Animal : INotifyPropertyChanged
+  {
+    private string name;
+
+    [PrimaryKey]
+    public int ID { get; set; }
+    public string CommonName
+    {
+      get { return name; }
+      set
+      {
+        name = value;
+        OnPropertyChanged();
+      }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+    public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+      PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public override string ToString()
+    {
+      return String.Format("{0,-6}{1}", ID, CommonName);
+    }
+  }
+
+  public class AnimalCollection : ObservableCollection<Animal> {}
 
   /// <summary>
   /// An empty page that can be used on its own or navigated to within a Frame.
@@ -29,6 +83,7 @@ namespace Lessons
   public sealed partial class Case5 : Page
   {
     SQLiteConnection DB;
+    public AnimalCollection Animals = new AnimalCollection();
 
     public Case5()
     {
@@ -78,7 +133,7 @@ namespace Lessons
       DB.DeleteAll<Animal>();
       DbListBox.Items.Clear();
       // run through items in collection and add them to DB
-      DB.InsertAll(CoListView.Items);
+      DB.InsertAll(Animals);
       // load DB into listbox
       LoadDBList();
       // update DB button states
@@ -88,11 +143,11 @@ namespace Lessons
     private void Col_Reset_Click(object sender, RoutedEventArgs e)
     {
       // toss all items from collection
-      CoListView.Items.Clear();
+      Animals.Clear();
       // add items from static source
-      CoListView.Items.Add(new Animal() { ID = 0, CommonName = "Dog" });
-      CoListView.Items.Add(new Animal() { ID = 1, CommonName = "Cat" });
-      CoListView.Items.Add(new Animal() { ID = 2, CommonName = "Horse" });
+      Animals.Add(new Animal() { ID = 0, CommonName = "Dog" });
+      Animals.Add(new Animal() { ID = 1, CommonName = "Cat" });
+      Animals.Add(new Animal() { ID = 2, CommonName = "Horse" });
       // update collection button states
       UpdateCollectionButtons();
     }
@@ -100,11 +155,11 @@ namespace Lessons
     private void Col_LoadFromDb_Click(object sender, RoutedEventArgs e)
     {
       // toss all items from collection
-      CoListView.Items.Clear();
+      Animals.Clear();
       // copy over items from DB list
       foreach (Animal a in DbListBox.Items)
       {
-        CoListView.Items.Add(a);
+        Animals.Add(a);
       }
       // update collection button states
       UpdateCollectionButtons();
@@ -113,7 +168,7 @@ namespace Lessons
     private void Col_ClearList_Click(object sender, RoutedEventArgs e)
     {
       // clear the collection
-      CoListView.Items.Clear();
+      Animals.Clear();
       // update collection button states
       UpdateCollectionButtons();
     }
@@ -121,7 +176,7 @@ namespace Lessons
     private void Col_DeleteSelected_Click(object sender, RoutedEventArgs e)
     {
       // remove the selected item from collection
-      CoListView.Items.Remove(CoListView.SelectedItem);
+      Animals.Remove(CoListView.SelectedItem as Animal);
       CoListView.SelectedItem = null;
       // update the collection buttons
       UpdateCollectionButtons();
@@ -131,7 +186,7 @@ namespace Lessons
     {
       int id = int.Parse(IdBox.Text);
       // attempt to find item with same ID in collection
-      var a = (Animal)(CoListView.Items.Where(p => (p as Animal).ID == id).SingleOrDefault());
+      var a = (Animal)(Animals.Where(p => (p as Animal).ID == id).SingleOrDefault());
       // if it exists in the collection, just update it
       if (a != null)
       {
@@ -139,12 +194,12 @@ namespace Lessons
       }
       else
       {       
-        CoListView.Items.Add(new Animal() { ID = id, CommonName = NameBox.Text });
-        var ol = CoListView.Items.OrderBy(p => (p as Animal).ID).ToList();
-        CoListView.Items.Clear();
+        Animals.Add(new Animal() { ID = id, CommonName = NameBox.Text });
+        var ol = Animals.OrderBy(p => (p as Animal).ID).ToList();
+        Animals.Clear();
         foreach (Animal oa in ol)
         {
-          CoListView.Items.Add(oa);
+          Animals.Add(oa);
         }
       }
       ClearItem();
@@ -187,26 +242,26 @@ namespace Lessons
 
     private void CoListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      // set selected item information in the item box
-      Animal selected = ((sender as ListView).SelectedItem as Animal);
-      if (selected != null)
-      {
-        NameBox.Text = selected.CommonName;
-        IdBox.Text = selected.ID.ToString();
-        UpdateItemButtons();
-      }
+      //// set selected item information in the item box
+      //Animal selected = ((sender as ListView).SelectedItem as Animal);
+      //if (selected != null)
+      //{
+      //  NameBox.Text = selected.CommonName;
+      //  IdBox.Text = selected.ID.ToString();
+      //  UpdateItemButtons();
+      //}
       UpdateCollectionButtons();
     }
 
     private void DbListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      Animal selected = ((sender as ListView).SelectedItem as Animal);
-      if (selected != null)
-      {
-        NameBox.Text = selected.CommonName;
-        IdBox.Text = selected.ID.ToString();
-        UpdateItemButtons();
-      }
+      //Animal selected = ((sender as ListView).SelectedItem as Animal);
+      //if (selected != null)
+      //{
+      //  NameBox.Text = selected.CommonName;
+      //  IdBox.Text = selected.ID.ToString();
+      //  UpdateItemButtons();
+      //}
       UpdateDatabaseButtons();
     }
     private void UpdateDatabaseButtons()
@@ -219,24 +274,27 @@ namespace Lessons
     private void UpdateCollectionButtons()
     {
       CoDeleteSelectedButton.IsEnabled = (CoListView.SelectedItem != null);
-      CoClearListButton.IsEnabled = (CoListView.Items.Count > 0);
-      DbCreateTableButton.IsEnabled = (CoListView.Items.Count > 0);
+      CoClearListButton.IsEnabled = (Animals.Count > 0);
+      DbCreateTableButton.IsEnabled = (Animals.Count > 0);
     }
 
     private void UpdateItemButtons()
     {
-      if (NameBox.Text.Length > 0 && IdBox.Text.Length > 0)
-      {
-        ItemToColButton.IsEnabled = true;
-        ItemCreateButton.IsEnabled = true;
-        ItemUpdateButton.IsEnabled = true;
-      }
-      else
-      {
-        ItemToColButton.IsEnabled = false;
-        ItemCreateButton.IsEnabled = false;
-        ItemUpdateButton.IsEnabled = false;
-      }
+      //if (NameBox.Text.Length > 0 && IdBox.Text.Length > 0)
+      //{
+      //  ItemToColButton.IsEnabled = true;
+      //  ItemCreateButton.IsEnabled = true;
+      //  ItemUpdateButton.IsEnabled = true;
+      //}
+      //else
+      //{
+      //  ItemToColButton.IsEnabled = false;
+      //  ItemCreateButton.IsEnabled = false;
+      //  ItemUpdateButton.IsEnabled = false;
+      //}
+      ItemToColButton.IsEnabled = false;
+      ItemCreateButton.IsEnabled = false;
+      ItemUpdateButton.IsEnabled = false;
     }
 
     private void LoadDBList()
@@ -262,6 +320,33 @@ namespace Lessons
     {
       NameBox.Text = "";
       IdBox.Text = "";
+    }
+
+    private void ChangeColItem_Click(object sender, RoutedEventArgs e)
+    {
+      int id = int.Parse(ColItemID.Text);
+      // attempt to find item with same ID in collection
+      var a = (Animal)(Animals.Where(p => (p as Animal).ID == id).SingleOrDefault());
+      // if it exists in the collection, just update it
+      if (a != null)
+      {
+        a.CommonName = ColItemName.Text;
+      }
+      else
+      {
+        Animals.Add(new Animal() { ID = id, CommonName = ColItemName.Text });
+
+        var ol = Animals.ToList<Animal>();
+        ol.Sort((x, y) => { return x.ID - y.ID; });
+        
+
+//        var ol = Animals.OrderBy(p => p.ID).ToList<Animal>();
+        Animals.Clear();
+        foreach (Animal oa in ol) Animals.Add(oa);
+      }
+      ClearItem();
+      // update collection buttons
+      UpdateCollectionButtons();
     }
   }
 }
